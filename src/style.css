@@ -4596,17 +4596,17 @@ ul {
 .select-success select:hover {
     border-color: #ffca00;
 }
-.select-success:after {
-    content: url(/themes/msps/assets/icons/check.svg);
-}
+/* .select-success:after {
+    content: url('https://www.sanpedrosula.hn/themes/msps/assets/themes/msps/assets/icons/check.svg');
+} */
 .select-danger select,
 .select-danger select:focus,
 .select-danger select:hover {
     border-color: #cc0000;
 }
-.select-danger:after {
-    content: url(/themes/msps/assets/icons/close.svg);
-}
+/* .select-danger:after {
+    content: url('https://www.sanpedrosula.hn/themes/msps/assets/themes/msps/assets/icons/close.svg');
+} */
 .switch,
 .switch-content {
     position: relative;
@@ -4728,17 +4728,17 @@ ul {
 .textarea-success textarea:hover {
     border-color: #ffca00;
 }
-.textarea-success:after {
+/* .textarea-success:after {
     content: url(/themes/msps/assets/icons/check.svg);
-}
+} */
 .textarea-danger textarea,
 .textarea-danger textarea:focus,
 .textarea-danger textarea:hover {
     border-color: #cc0000;
 }
-.textarea-danger:after {
+/* .textarea-danger:after {
     content: url(/themes/msps/assets/icons/close.svg);
-}
+} */
 .box {
     padding: 1rem;
     border-radius: 4px;
@@ -5713,17 +5713,17 @@ ul {
 .input-success input:hover {
     border-color: #ffca00;
 }
-.input-success:after {
+/* .input-success:after {
     content: url(/themes/msps/assets/icons/check.svg);
-}
+} */
 .input-danger input,
 .input-danger input:focus,
 .input-danger input:hover {
     border-color: #cc0000;
 }
-.input-danger:after {
+/* .input-danger:after {
     content: url(/themes/msps/assets/icons/close.svg);
-}
+} */
 .label {
     font-size: 14px;
     font-weight: 700;
@@ -8280,7 +8280,7 @@ body.lb-disable-scrolling {
     right: auto;
     left: auto;
     bottom: 20px;
-    background-image: url(/themes/msps/assets/images/logos/logo_muni-form.svg);
+    /* background-image: url(/themes/msps/assets/images/logos/logo_muni-form.svg); */
     background-repeat: no-repeat;
     background-position: 50%;
     background-size: cover;
@@ -10874,7 +10874,7 @@ body.lb-disable-scrolling {
     position: absolute;
     width: 50px;
     height: 50px;
-    background-image: url(/themes/msps/assets/icons/play.svg);
+    /* background-image: url(/themes/msps/assets/icons/play.svg); */
     background-repeat: no-repeat;
     background-position: 50%;
     background-size: cover;

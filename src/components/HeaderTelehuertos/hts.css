@@ -1,0 +1,32 @@
+.header {
+    position: relative;
+    height: 400px; /* Adjust the height as needed */
+    color: white;
+}
+
+.header .container {
+    background: radial-gradient(circle, #008d00 0%, #008d00 70%, rgba(0,0,0,0) 70%), linear-gradient(to right, #008d00, transparent);
+    background-color: #008d00;
+    position: relative;
+    z-index: 1;
+    text-align: left;
+}
+
+.header h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.header p {
+    font-size: 1.2em;
+    margin-bottom: 40px;
+}
+
+.header .header-2-bg {
+    position: flex;
+    width: 100%;
+    height: 100%;
+    background-image: url('https://www.sanpedrosula.hn/storage/app/media/Imagenes/TeleHuertos/TeleHuertos-encabezado.jpg');
+
+    z-index: 0;
+}

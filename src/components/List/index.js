@@ -1,236 +1,374 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useTable, useSortBy, usePagination } from "react-table";
-import makeData from "./makeData";
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import { alpha } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Checkbox from '@mui/material/Checkbox';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FilterListIcon from '@mui/icons-material/FilterList';
+import { visuallyHidden } from '@mui/utils';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
+import { HeaderTelehuertos } from '../HeaderTelehuertos';
 
-const serverData = makeData(10000);
 
-function Table({
-  columns,
-  data,
-  onSort,
-  fetchData,
-  loading,
-  pageCount: controlledPageCount
-}) {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    page,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize, sortBy }
-  } = useTable(
-    {
-      columns,
-      data,
-      manualPagination: true,
-      manualSortBy: true,
-      autoResetPage: false,
-      autoResetSortBy: false,
-      pageCount: controlledPageCount
-    },
-    useSortBy,
-    usePagination
+function createData(idPost, Titulo, idCategoria, Categoria) {
+  const id = Math.floor(Math.random() * 1000000);
+  return {
+    id,
+    Titulo,
+    idCategoria,
+    Categoria,
+  };
+}
+
+const rows = [
+  createData(391, '¿QUE ES UNA CUENCA HIDROGRÁFICA?', 2, 'PREGUNTAS'),
+  createData(391, '¿QUE ES UNA CUENCA HIDROGRÁFICA?', 2, 'PREGUNTAS'),
+  createData(391, '¿QUE ES UNA CUENCA HIDROGRÁFICA?', 2, 'PREGUNTAS'),
+  createData(391, '¿QUE ES UNA CUENCA HIDROGRÁFICA?', 2, 'PREGUNTAS'),
+  createData(391, '¿QUE ES UNA CUENCA HIDROGRÁFICA?', 2, 'PREGUNTAS'),
+  createData(391, '¿QUE ES UNA CUENCA HIDROGRÁFICA?', 2, 'PREGUNTAS'),
+  createData(391, '¿QUE ES UNA CUENCA HIDROGRÁFICA?', 2, 'PREGUNTAS'),
+  createData(391, '¿QUE ES UNA CUENCA HIDROGRÁFICA?', 2, 'PREGUNTAS'),
+  createData(391, '¿QUE ES UNA CUENCA HIDROGRÁFICA?', 2, 'PREGUNTAS'),
+  createData(391, '¿QUE ES UNA CUENCA HIDROGRÁFICA?', 2, 'PREGUNTAS'),
+  createData(391, '¿QUE ES UNA CUENCA HIDROGRÁFICA?', 2, 'PREGUNTAS'),
+  createData(391, '¿QUE ES UNA CUENCA HIDROGRÁFICA?', 2, 'PREGUNTAS'),
+  createData(391, '¿QUE ES UNA CUENCA HIDROGRÁFICA?', 2, 'PREGUNTAS'),   
+];
+
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
+// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
+// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
+// with exampleArray.slice().sort(exampleComparator)
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
+/*   idPost,
+    Titulo,
+    idCategoria,
+    Categoria,*/
+const headCells = [
+  { id: 'idPost', label: 'id' },
+  { id: 'Titulo',  label: 'Titulo' },
+  { id: 'Categoria',label: 'Categoria' },
+  { id: 'Button', label: ''}
+];
+
+function EnhancedTableHead(props) {
+  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
+    props;
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
+  };
+
+  return (
+    <TableHead>
+      <TableRow>
+        <TableCell padding="checkbox">
+          
+        </TableCell>
+        {headCells.map((headCell) => (
+          <TableCell
+            key={headCell.id}
+            align={headCell.numeric ? 'right' : 'left'}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : 'asc'}
+              onClick={createSortHandler(headCell.id)}
+            >
+              {headCell.label}
+              {orderBy === headCell.id ? (
+                <Box component="span" sx={visuallyHidden}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
   );
+}
 
-  useEffect(() => {
-    onSort({ sortBy, pageIndex, pageSize });
-    fetchData({ pageIndex, pageSize });
-  }, [onSort, sortBy, fetchData, pageIndex, pageSize]);
+EnhancedTableHead.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+  onRequestSort: PropTypes.func.isRequired,
+  onSelectAllClick: PropTypes.func.isRequired,
+  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  orderBy: PropTypes.string.isRequired,
+  rowCount: PropTypes.number.isRequired,
+};
+
+function EnhancedTableToolbar(props) {
+  const { numSelected } = props;
+
+  return (
+    <Toolbar
+      sx={{
+        pl: { sm: 2 },
+        pr: { xs: 1, sm: 1 },
+        ...(numSelected > 0 && {
+          bgcolor: (theme) =>
+            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+        }),
+      }}
+    >
+      {numSelected > 0 ? (
+        <Typography
+          sx={{ flex: '1 1 100%' }}
+          color="inherit"
+          variant="subtitle1"
+          component="div"
+        >
+          {numSelected} selected
+        </Typography>
+      ) : (
+        <Typography
+          sx={{ flex: '1 1 100%' }}
+          variant="h6"
+          id="tableTitle"
+          component="div"
+        >
+          Recursos
+        </Typography>
+      )}
+    </Toolbar>
+  );
+}
+
+EnhancedTableToolbar.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+};
+
+export default function List() {
+  const [order, setOrder] = React.useState('asc');
+  const [orderBy, setOrderBy] = React.useState('calories');
+  const [selected, setSelected] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const navigate = useNavigate();
+  React.useEffect(() => {
+    if (selected.length > 0) {
+      const initialSelected = [];
+      setSelected(initialSelected);
+
+     navigate(`/details/${selected[0]}`);// Replace '/details/' with your desired route
+     
+     // alert(`/details/${selected[0]}`);
+    }
+  }, [selected, navigate]);
+
+  React.useEffect(() => {
+    const initialSelected = [];
+    setSelected(initialSelected);
+  }, []);
+  
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelected = rows.map((n) => n.id);
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1),
+      );
+    }
+    setSelected(newSelected);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const handleChangeDense = (event) => {
+    setDense(event.target.checked);
+  };
+
+  const isSelected = (id) => selected.indexOf(id) !== -1;
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  const visibleRows = React.useMemo(
+    () =>
+      stableSort(rows, getComparator(order, orderBy)).slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage,
+      ),
+    [order, orderBy, page, rowsPerPage],
+  );
 
   return (
     <>
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                // Add the sorting props to control sorting. For this example
-                // we can add them into the header props
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                  {column.render("Header")}
-                  {/* Add a sort direction indicator */}
-                  <span>
-                    {column.isSorted
-                      ? column.isSortedDesc
-                        ? " 🔽"
-                        : " 🔼"
-                      : ""}
-                  </span>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.map((row, i) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return (
-                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-          <tr>
-            {loading ? (
-              // Use our custom loading state to show a loading indicator
-              <td colSpan="10000">Loading...</td>
-            ) : (
-              <td colSpan="10000">
-                Showing {page.length} of ~{controlledPageCount * pageSize}{" "}
-                results
-              </td>
-            )}
-          </tr>
-        </tbody>
-      </table>
-      <div className="pagination">
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {"<<"}
-        </button>{" "}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {"<"}
-        </button>{" "}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {">"}
-        </button>{" "}
-        <button onClick={() => gotoPage(pageOptions.length - 1)} disabled={!canNextPage}>
-            {">>"}
-        </button>{" "}
-        <span>
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{" "}
-        </span>
-        <span>
-          | Go to page:{" "}
-          <input
-            type="number"
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0;
-              gotoPage(page);
-            }}
-            style={{ width: "100px" }}
-          />
-        </span>{" "}
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-          }}
-        >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
-      </div>
-    </>
+    <Box sx={{ width: '69%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', margin: '0 auto', marginTop: '20px' }}>
+      <Paper
+        sx={{
+          width: '100%',
+          mb: 5,
+          backgroundColor: '#f0f7f0',
+          boxShadow: '0px 0px 15px 0px rgba(0,141,0,20.5)',
+          transition: 'box-shadow 0.3s ease', // Add transition for smooth hover effect
+          '&:hover': {
+            boxShadow: '0px 0px 150px 0px rgba(0,141,0,2000.5)', // Change shadow on hover
+          },
+        }}
+      >
+        {/* Rest of your component code */}
+        <EnhancedTableToolbar numSelected={selected.length} />
+        <TableContainer>
+          <Table
+            sx={{ minWidth: 750 }}
+            aria-labelledby="tableTitle"
+            size={dense ? 'small' : 'medium'}
+          >
+            <EnhancedTableHead
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={rows.length} />
+            <TableBody>
+              {visibleRows.map((row, index) => {
+                const isItemSelected = isSelected(row.id);
+                const labelId = `enhanced-table-checkbox-${index}`;
+
+                return (
+                  <TableRow
+                    onClick={(event) => handleClick(event, row.id)}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isItemSelected}
+                    sx={{
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: 'rgb(0,141,0,2000.5)',
+                      },
+                    }}
+                  >
+                    <TableCell padding="checkbox">
+
+                    </TableCell>
+                    <TableCell
+                      align="left"
+                    >
+                      {row.id}
+                    </TableCell>
+                    <TableCell align="left">{row.Titulo}</TableCell>
+                    <TableCell align="left">{row.Categoria}</TableCell>
+                    <TableCell align="left"><Button style={{
+                      backgroundColor: '#ffc107',
+                      color: '#000000',
+                      borderRadius: '5px',
+                      padding: '5px',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.3s ease',
+                      '&:hover': {
+                        backgroundColor: '#00b300',
+                      },
+                    }}>Ver Detalles</Button></TableCell>
+                  </TableRow>
+                );
+              })}
+              {emptyRows > 0 && (
+                <TableRow
+                  style={{
+                    height: (dense ? 33 : 53) * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage} />
+      </Paper>
+      <FormControlLabel
+        control={<Switch checked={dense} onChange={handleChangeDense} />}
+        label="Lista condensada" />
+    </Box></>
   );
 }
-
-function List() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = React.useState(false);
-  const [pageCount, setPageCount] = React.useState(0);
-  const fetchIdRef = React.useRef(0);
-  const sortIdRef = React.useRef(0);
-
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "First Name",
-        accessor: "firstName"
-      },
-      {
-        Header: "Last Name",
-        accessor: "lastName"
-      }
-    ],
-    []
-  );
-
-  const fetchData = React.useCallback(({ pageSize, pageIndex }) => {
-    // This will get called when the table needs new data
-    // You could fetch your data from literally anywhere,
-    // even a server. But for this example, we'll just fake it.
-
-    // Give this fetch an ID
-    const fetchId = ++fetchIdRef.current;
-
-    // Set the loading state
-    setLoading(true);
-
-    // We'll even set a delay to simulate a server here
-    setTimeout(() => {
-      // Only update the data if this is the latest fetch
-      if (fetchId === fetchIdRef.current) {
-        const startRow = pageSize * pageIndex;
-        const endRow = startRow + pageSize;
-        setData(serverData.slice(startRow, endRow));
-
-        // Your server could send back total page count.
-        // For now we'll just fake it, too
-        setPageCount(Math.ceil(serverData.length / pageSize));
-
-        setLoading(false);
-      }
-    }, 1000);
-  }, []);
-
-  const handleSort = useCallback(({ sortBy, pageIndex, pageSize }) => {
-    // Give this sort an ID
-    const sortId = ++sortIdRef.current;
-    // Set the loading state
-    setLoading(true);
-
-    //simulate remove server sort
-    setTimeout(() => {
-      // Doing multisort
-      if (sortId === sortIdRef.current) {
-        let sorted = serverData.slice();
-        sorted.sort((a, b) => {
-          for (let i = 0; i < sortBy.length; ++i) {
-            if (a[sortBy[i].id] > b[sortBy[i].id])
-              return sortBy[i].desc ? -1 : 1;
-            if (a[sortBy[i].id] < b[sortBy[i].id])
-              return sortBy[i].desc ? 1 : -1;
-          }
-          return 0;
-        });
-        const startRow = pageSize * pageIndex;
-        const endRow = startRow + pageSize;
-        setData(sorted.slice(startRow, endRow));
-        console.log(sorted.slice(0, 10));
-        setLoading(false);
-      }
-    }, 200);
-  }, []);
-
-  return (
-    <Table
-      columns={columns}
-      data={data}
-      onSort={handleSort}
-      fetchData={fetchData}
-      loading={loading}
-      pageCount={pageCount}
-    />
-  );
-}
-
-export default List;
