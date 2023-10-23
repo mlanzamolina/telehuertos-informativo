@@ -28,69 +28,33 @@ import { useNavigate } from "react-router-dom";
 import { visuallyHidden } from "@mui/utils";
 import { HeaderTelehuertos } from "../HeaderTelehuertos";
 
-function createData(idPost, Titulo, idCategoria, Categoria) {
-  // const id = Math.floor(Math.random() * 1000000);
-  const id = idPost;
-  return {
-    id,
-    Titulo,
-    idCategoria,
-    Categoria,
-  };
-}
+// function createData(idPost, Titulo, idCategoria, Categoria) {
+//   // const id = Math.floor(Math.random() * 1000000);
+//   const id = idPost;
+//   return {
+//     id,
+//     Titulo,
+//     idCategoria,
+//     Categoria,
+//   };
+// }
 
-const rows = [
-  createData(269, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-  createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "RESPUESTAS"),
-  createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-  createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-  createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-  createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-  createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-  createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-  createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-  createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-  createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-  createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-  createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-];
+// const rows = [
+//   createData(269, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
+//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "RESPUESTAS"),
+//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
+//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
+//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
+//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
+//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
+//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
+//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
+//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
+//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
+//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
+//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
+// ];
 
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-/*   idPost,
-    Titulo,
-    idCategoria,
-    Categoria,*/
 const headCells = [
   { id: "idPost", label: "id" },
   { id: "Titulo", label: "Titulo" },
@@ -198,10 +162,43 @@ export default function List() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
+  const [rows, setDataFetch] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const navigate = useNavigate();
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      console.log("Fetching data...");
+      try {
+        const response = await fetch(
+          `${window.env.REACT_APP_BASE_URL}/post/1`,
+          {
+            headers: {
+              "X-API-KEY": "YXBpa2V5X21zcHNfdHJhbWl0ZXM=",
+            },
+          },
+        );
+        console.log("Response:", response);
+        if (response.ok) {
+          const dataJson = await response.json();
+          console.log("Data:", dataJson);
+          setDataFetch(dataJson); // Update the state with fetched data
+          setIsLoading(false);
+        } else {
+          console.error("Error fetching item details:", response.statusText);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error fetching item details:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
   React.useEffect(() => {
     if (selected.length > 0) {
       const initialSelected = [];
@@ -272,7 +269,43 @@ export default function List() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   const [searchTerm, setSearchTerm] = React.useState("");
-  const visibleRows = React.useMemo(() => {
+
+  // Stable sort function
+  function stableSort(array, compareFn) {
+    // Create a copy of the array
+    const sortedArray = [...array];
+
+    // Sort the array using a stable sorting algorithm
+    sortedArray.sort((a, b) => compareFn(a, b));
+
+    return sortedArray;
+  }
+
+  // Get comparator function
+  function getComparator(order, orderBy) {
+    const compareFn = (a, b) => {
+      if (a[orderBy] < b[orderBy]) {
+        return -1;
+      }
+      if (a[orderBy] > b[orderBy]) {
+        return 1;
+      }
+      return 0;
+    };
+
+    // If the order is descending, reverse the comparator function
+    if (order === "desc") {
+      return (a, b) => compareFn(b, a);
+    } else {
+      return compareFn;
+    }
+  }
+
+  // Visible rows state variable
+  const [visibleRows, setVisibleRows] = React.useState([]);
+
+  // UseMemo to calculate the visible rows
+  React.useMemo(() => {
     const filteredRows = rows.filter((row) => {
       const searchTermLowerCase = searchTerm.toLowerCase();
       return (
@@ -281,11 +314,20 @@ export default function List() {
         row.id.toString().toLowerCase().includes(searchTermLowerCase)
       );
     });
-    return stableSort(
-      searchTerm ? filteredRows : rows,
-      getComparator(order, orderBy),
-    ).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  }, [order, orderBy, page, rowsPerPage, searchTerm]);
+
+    // Stable sort the filtered rows
+    const sortedRows = stableSort(filteredRows, getComparator(order, orderBy));
+
+    // Slice the sorted rows to get the visible rows
+    const visibleRows = sortedRows.slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage,
+    );
+
+    // Set the visible rows state variable
+    setVisibleRows(visibleRows);
+  }, [order, orderBy, page, rows, rowsPerPage, searchTerm]);
+
   function handleSearch(event) {
     const searchTerm = event.target.value;
     setSearchTerm(searchTerm);
@@ -322,9 +364,7 @@ export default function List() {
             type="text"
             placeholder="Buscar"
             onKeyUp={handleSearch}
-            sx={{
-              outlineColor: "green",
-            }}
+            color="success"
           />
           <TableContainer>
             <Table
@@ -341,17 +381,17 @@ export default function List() {
                 rowCount={rows.length}
               />
               <TableBody>
-                {visibleRows.map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
+                {rows.map((row, index) => {
+                  const isItemSelected = isSelected(row.idPost);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
-                      onClick={(event) => handleClick(event, row.id)}
+                      onClick={(event) => handleClick(event, row.idPost)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.id}
+                      key={row.idPost}
                       selected={isItemSelected}
                       sx={{
                         cursor: "pointer",
@@ -361,7 +401,7 @@ export default function List() {
                       }}
                     >
                       <TableCell padding="checkbox"></TableCell>
-                      <TableCell align="left">{row.id}</TableCell>
+                      <TableCell align="left">{row.idPost}</TableCell>
                       <TableCell align="left">{row.Titulo}</TableCell>
                       <TableCell align="left">{row.Categoria}</TableCell>
                       <TableCell align="left">
