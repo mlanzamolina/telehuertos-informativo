@@ -1,16 +1,16 @@
-import React, { lazy } from 'react';
+import React, { lazy } from "react";
 
-const List = lazy(() => import('./List'));
-const Details = lazy(() => import('./Details'));
+const List = lazy(() => import("./List"));
+const Details = lazy(() => import("./Details"));
 
 const routes = [
   {
-    path: '/list',
+    path: "/list",
     exact: true,
     element: <List />,
   },
   {
-    path: '/details/:id',
+    path: "/details/:id",
     exact: true,
     element: <Details />,
   },

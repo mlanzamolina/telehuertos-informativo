@@ -7523,7 +7523,7 @@ body.lb-disable-scrolling {
     position: absolute;
     right: 0;
     top: 0;
-    width: 55%;
+    width: 50%;
     height: 100%;
 }
 @media (max-width: 767.98px) {
