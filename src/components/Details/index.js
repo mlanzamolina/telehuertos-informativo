@@ -179,7 +179,8 @@ export const Details = () => {
                             borderRadius: "1rem",
                             cursor: "pointer",
                             "&:hover": {
-                              backgroundColor: "green",
+                              backgroundColor: "#e7f4e7",
+                              color: "black", // Change the letter color to white on hover
                             },
                           }}
                           onClick={() => window.open(file.FileLink, "_blank")}
