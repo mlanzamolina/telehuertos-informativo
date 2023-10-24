@@ -311,7 +311,7 @@ export default function List() {
       return (
         row.Titulo.toLowerCase().includes(searchTermLowerCase) ||
         row.Categoria.toLowerCase().includes(searchTermLowerCase) ||
-        row.id.toString().toLowerCase().includes(searchTermLowerCase)
+        row.idPost.toString().toLowerCase().includes(searchTermLowerCase)
       );
     });
 
@@ -381,7 +381,7 @@ export default function List() {
                 rowCount={rows.length}
               />
               <TableBody>
-                {rows.map((row, index) => {
+                {visibleRows.map((row, index) => {
                   const isItemSelected = isSelected(row.idPost);
                   const labelId = `enhanced-table-checkbox-${index}`;
 

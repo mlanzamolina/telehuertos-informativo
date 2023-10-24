@@ -1,7 +1,6 @@
 {
   "name": "telehuertos-informativo",
   "version": "0.1.0",
-  "homepage": "https://www.sanpedrosula.hn/Tele-informativo",
   "private": true,
   "browser": {
     "hot": true

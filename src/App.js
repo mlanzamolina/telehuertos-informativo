@@ -15,10 +15,13 @@ function App() {
     <div className="App">
       <Header />
       <HeaderTelehuertos />
-      <BrowserRouter basename={rutaServidor}>
+      {/* <BrowserRouter basename={rutaServidor}> */}
+      <BrowserRouter >
         <Routes>
-          <Route path="/" exact element={<List />} />
+          <Route path="/" element={<List />} />
           <Route path="/details/:id" element={<Details />} />
+          <Route path="/tele-informativo/" element={<List />} />
+          <Route path="/tele-informativo/details/:id" element={<Details />} />
         </Routes>
       </BrowserRouter>
       <Footer />
