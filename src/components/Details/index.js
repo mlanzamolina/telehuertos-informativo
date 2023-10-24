@@ -144,14 +144,10 @@ export const Details = () => {
                   padding: "1rem",
                   borderRadius: "1rem",
                   cursor: "pointer",
-                  "&:hover": {
-                    backgroundColor: "green",
-                  },
                 }}
-                onClick={() => window.open(`mailto:${post?.correo}`, "_blank")}
               >
                 <EmailRounded sx={{ marginRight: ".5rem" }} />
-                {post?.correo}
+                {post.correo}
               </Typography>
             </Card>
 
@@ -166,30 +162,15 @@ export const Details = () => {
               <Typography variant="h4" gutterBottom>
                 Download Files
               </Typography>
+
               {isLoading2 ? (
-                Array.isArray(files) &&
-                files.length > 0 && (
+                Array.isArray(files) && files.length >= 1 ? (
                   <>
                     {files.map((file, index) => (
                       <Box
                         sx={{ display: "flex", justifyContent: "left" }}
                         key={index}
                       >
-                        {/* <Button
-                        variant="contained"
-                        color="success" // Change color to green
-                        sx={{
-                          marginBottom: 1,
-                          fontSize: "1.2rem", // Increase font size
-                          padding: "1rem", // Increase padding
-                          borderRadius: "1rem", // Increase border radius
-                        }}
-                        onClick={() => window.open(file.FileLink, '_blank')}
-                      >
-                        <a href={file.FileLink} download style={{ textDecoration: "none", color: "inherit" }}>
-                          {file.NombreArchivo}
-                        </a>
-                      </Button> */}
                         <Typography
                           variant="h6"
                           sx={{
@@ -209,9 +190,15 @@ export const Details = () => {
                       </Box>
                     ))}
                   </>
+                ) : (
+                  <Typography variant="h6" textAlign="center">
+                    No se encontró ningún registro.
+                  </Typography>
                 )
               ) : (
-                <CircularProgress />
+                <>
+                  <CircularProgress />
+                </>
               )}
             </Card>
           </Box>
