@@ -7,6 +7,7 @@ export const HeaderTelehuertos = () => {
       style={{
         background:
           "radial-gradient(circle, #008d00 0%, #008d00 70%, rgba(0,0,0,0) 70%), linear-gradient(to right, #008d00, transparent)",
+        backgroundColor: "#e7f4e7",
       }}
     >
       <div className="container">

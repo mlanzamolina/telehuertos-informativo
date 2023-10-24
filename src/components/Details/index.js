@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, Link, Card, Button, Box, CircularProgress } from "@mui/material";
+import {
+  Typography,
+  Link,
+  Card,
+  Button,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 import DownloadFile from "./DownloadFile";
 import { useNavigate } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import DownloadIcon from "@mui/icons-material/Download";
+import { EmailRounded } from "@mui/icons-material";
 
 export const Details = () => {
   const { id } = useParams();
@@ -42,7 +51,7 @@ export const Details = () => {
               headers: myHeaders,
               body: `idPost=${id}`,
               redirect: "follow",
-            }
+            },
           );
 
           if (filesResponse.ok) {
@@ -57,14 +66,13 @@ export const Details = () => {
         }
       } catch (error) {
         console.error("Error fetching data:", error);
-      } 
+      }
     };
 
     fetchData();
   }, [id]);
 
   return (
-    
     <Box
       sx={{
         backgroundColor: "#e7f4e7",
@@ -72,100 +80,145 @@ export const Details = () => {
         elevation: 10,
       }}
     >
-      {isLoading?
-      <><Box sx={{ display: "flex", justifyContent: "start" }}>
-          <Button
-            color="success" // Change color to green
-            startIcon={<ArrowBackIosIcon />}
-            onClick={() => {
-              navigate("/");
-            } }
-            sx={{
-              marginBottom: 1,
-              fontSize: "1.2rem", // Increase font size
-              padding: "1rem", // Increase padding
-              borderRadius: "1rem", // Increase border radius
-            }} />
-        </Box><Box display="flex" justifyContent="space-between">
+      {isLoading ? (
+        <>
+          <Box sx={{ display: "flex", justifyContent: "start" }}>
+            <Button
+              color="success" // Change color to green
+              startIcon={<ArrowBackIosIcon />}
+              onClick={() => {
+                navigate("/");
+              }}
+              sx={{
+                marginBottom: 1,
+                fontSize: "1.2rem", // Increase font size
+                padding: "1rem", // Increase padding
+                borderRadius: "1rem", // Increase border radius
+              }}
+            />
+          </Box>
+          <Box display="flex" justifyContent="space-between">
             <Card
               sx={{
                 flex: 1,
-                padding: 2,
+                padding: 3,
                 justifySelf: "start",
                 elevation: 10,
               }}
             >
-
               <Typography variant="h4" gutterBottom>
                 {post?.Titulo}
               </Typography>
 
               <Typography variant="body1" gutterBottom>
                 {post?.descripcion}
-
               </Typography>
 
               {post?.youtube && (
-                <Link href={post?.youtube} target="_blank">
-                  Video Link
-                </Link>
+                <Box>
+                  <iframe
+                    width="560"
+                    height="315"
+                    src={`https://www.youtube.com/embed/${
+                      post?.youtube.split("=")[1]
+                    }`}
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                  ></iframe>
+                </Box>
               )}
 
-              <Typography variant="h4">
-                Additional Information
-              </Typography>
+              <Typography variant="h4">Additional Information</Typography>
 
-              <Typography variant="body2">
-                {post?.info_adicional}
+              <Typography variant="body2">{post?.info_adicional}</Typography>
 
-              </Typography>
-
-              <Typography variant="body2">
+              {/* <Typography variant="body2">
                 <a href={`mailto:${post?.correo}`}>{post?.correo}</a>
-
+              </Typography> */}
+              <Typography
+                variant="h6"
+                sx={{
+                  fontSize: "1.2rem",
+                  padding: "1rem",
+                  borderRadius: "1rem",
+                  cursor: "pointer",
+                  "&:hover": {
+                    backgroundColor: "green",
+                  },
+                }}
+                onClick={() => window.open(`mailto:${post?.correo}`, "_blank")}
+              >
+                <EmailRounded sx={{ marginRight: ".5rem" }} />
+                {post?.correo}
               </Typography>
-
             </Card>
 
             <Card
               sx={{
                 flex: 1,
-                padding: 1,
+                padding: 3,
                 justifySelf: "end",
                 elevation: 10,
               }}
             >
-
               <Typography variant="h4" gutterBottom>
                 Download Files
               </Typography>
-              {isLoading2 ? (Array.isArray(files) && files.length > 0 && (
-                <>
-                  {files.map((file, index) => (
-                    <Box sx={{ display: "flex", justifyContent: "center" }} key={index}>
-                      <Button
+              {isLoading2 ? (
+                Array.isArray(files) &&
+                files.length > 0 && (
+                  <>
+                    {files.map((file, index) => (
+                      <Box
+                        sx={{ display: "flex", justifyContent: "left" }}
+                        key={index}
+                      >
+                        {/* <Button
                         variant="contained"
                         color="success" // Change color to green
-                        onClick={() => {
-                          navigate("/");
-                        }}
                         sx={{
                           marginBottom: 1,
                           fontSize: "1.2rem", // Increase font size
                           padding: "1rem", // Increase padding
                           borderRadius: "1rem", // Increase border radius
                         }}
+                        onClick={() => window.open(file.FileLink, '_blank')}
                       >
-                        <DownloadFile file={file} />
-                      </Button>
-                    </Box>
-                  ))}
-                </>
-              )) : <CircularProgress />}
-              
+                        <a href={file.FileLink} download style={{ textDecoration: "none", color: "inherit" }}>
+                          {file.NombreArchivo}
+                        </a>
+                      </Button> */}
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            fontSize: "1.2rem",
+                            padding: "1rem",
+                            borderRadius: "1rem",
+                            cursor: "pointer",
+                            "&:hover": {
+                              backgroundColor: "green",
+                            },
+                          }}
+                          onClick={() => window.open(file.FileLink, "_blank")}
+                        >
+                          <DownloadIcon sx={{ marginRight: ".5rem" }} />
+                          {file.NombreArchivo}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </>
+                )
+              ) : (
+                <CircularProgress />
+              )}
             </Card>
-          </Box></>
-       : <CircularProgress />}
+          </Box>
+        </>
+      ) : (
+        <CircularProgress />
+      )}
     </Box>
   );
 };

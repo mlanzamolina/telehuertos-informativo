@@ -164,7 +164,7 @@ export default function List() {
   const [selected, setSelected] = React.useState([]);
   const [rows, setDataFetch] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
+  const [dense, setDense] = React.useState(true);
   const navigate = useNavigate();
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [isLoading, setIsLoading] = React.useState(true);
@@ -337,25 +337,19 @@ export default function List() {
     <>
       <Box
         sx={{
-          width: "69%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          margin: "0 auto",
-          marginTop: "20px",
+          backgroundColor: "#e7f4e7",
+          padding: "50px", // Add this line to fill in the white space with the background color
         }}
       >
-        <Paper
+        <Box
           sx={{
-            width: "100%",
-            mb: 5,
+            width: "69%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "0 auto",
             backgroundColor: "#f0f7f0",
-            boxShadow: "0px 0px 15px 0px rgba(0,141,0,20.5)",
-            transition: "box-shadow 0.3s ease", // Add transition for smooth hover effect
-            "&:hover": {
-              boxShadow: "0px 0px 150px 0px rgba(0,141,0,2000.5)", // Change shadow on hover
-            },
           }}
         >
           {/* Rest of your component code */}
@@ -436,6 +430,23 @@ export default function List() {
               </TableBody>
             </Table>
           </TableContainer>
+          <FormControlLabel
+            sx={{
+              "&.active": {
+                backgroundColor: "green",
+              },
+              color: dense ? "green" : "red",
+            }}
+            control={
+              <Switch
+                checked={dense}
+                onChange={handleChangeDense}
+                color="success"
+              />
+            }
+            label="Lista condensada"
+          />
+
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
@@ -445,11 +456,7 @@ export default function List() {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
-        </Paper>
-        <FormControlLabel
-          control={<Switch checked={dense} onChange={handleChangeDense} />}
-          label="Lista condensada"
-        />
+        </Box>
       </Box>
     </>
   );

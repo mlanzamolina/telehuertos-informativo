@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import List from "./components/List";
@@ -15,15 +15,15 @@ function App() {
     <div className="App">
       <Header />
       <HeaderTelehuertos />
-      {/* <BrowserRouter basename={rutaServidor}> */}
-      <BrowserRouter >
+      <HashRouter>
+        {/* <BrowserRouter > */}
         <Routes>
           <Route path="/" element={<List />} />
           <Route path="/details/:id" element={<Details />} />
           <Route path="/tele-informativo/" element={<List />} />
           <Route path="/tele-informativo/details/:id" element={<Details />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
       <Footer />
     </div>
   );
