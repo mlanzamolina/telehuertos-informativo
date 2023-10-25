@@ -28,35 +28,8 @@ import { useNavigate } from "react-router-dom";
 import { visuallyHidden } from "@mui/utils";
 import { HeaderTelehuertos } from "../HeaderTelehuertos";
 
-// function createData(idPost, Titulo, idCategoria, Categoria) {
-//   // const id = Math.floor(Math.random() * 1000000);
-//   const id = idPost;
-//   return {
-//     id,
-//     Titulo,
-//     idCategoria,
-//     Categoria,
-//   };
-// }
-
-// const rows = [
-//   createData(269, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "RESPUESTAS"),
-//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-//   createData(391, "¿QUE ES UNA CUENCA HIDROGRÁFICA?", 2, "PREGUNTAS"),
-// ];
-
 const headCells = [
-  { id: "idPost", label: "id" },
+  // { id: "idPost", label: "id" },
   { id: "Titulo", label: "Titulo" },
   { id: "Categoria", label: "Categoria" },
   { id: "Button", label: "" },
@@ -310,8 +283,8 @@ export default function List() {
       const searchTermLowerCase = searchTerm.toLowerCase();
       return (
         row.Titulo.toLowerCase().includes(searchTermLowerCase) ||
-        row.Categoria.toLowerCase().includes(searchTermLowerCase) ||
-        row.idPost.toString().toLowerCase().includes(searchTermLowerCase)
+        row.Categoria.toLowerCase().includes(searchTermLowerCase)
+        // || row.idPost.toString().toLowerCase().includes(searchTermLowerCase)
       );
     });
 
@@ -395,7 +368,7 @@ export default function List() {
                       }}
                     >
                       <TableCell padding="checkbox"></TableCell>
-                      <TableCell align="left">{row.idPost}</TableCell>
+                      {/* <TableCell align="left">{row.idPost}</TableCell> */}
                       <TableCell align="left">{row.Titulo}</TableCell>
                       <TableCell align="left">{row.Categoria}</TableCell>
                       <TableCell align="left">

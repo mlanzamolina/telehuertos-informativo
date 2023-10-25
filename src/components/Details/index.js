@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import DownloadIcon from "@mui/icons-material/Download";
 import { EmailRounded } from "@mui/icons-material";
+import PlayCircleFilledWhiteRounded from "@mui/icons-material/PlayCircleFilledWhiteRounded";
 
 export const Details = () => {
   const { id } = useParams();
@@ -97,13 +98,24 @@ export const Details = () => {
               }}
             />
           </Box>
-          <Box display="flex" justifyContent="space-between">
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            sx={{
+              "@media (max-width: 576px)": {
+                flexDirection: "column",
+              },
+            }}
+          >
             <Card
               sx={{
                 flex: 1,
                 padding: 3,
                 justifySelf: "start",
                 elevation: 10,
+                "@media (max-width: 576px)": {
+                  flexWrap: "wrap",
+                },
               }}
             >
               <Typography variant="h4" gutterBottom>
@@ -115,18 +127,37 @@ export const Details = () => {
               </Typography>
 
               {post?.youtube && (
-                <Box>
-                  <iframe
-                    width="560"
-                    height="315"
-                    src={`https://www.youtube.com/embed/${
-                      post?.youtube.split("=")[1]
-                    }`}
-                    title="YouTube video player"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen
-                  ></iframe>
+                <Box
+                  sx={{
+                    backgroundColor: "#fff",
+                    borderRadius: "1rem",
+                    overflow: "hidden",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      position: "relative",
+                      width: "100%",
+                      height: 0,
+                      paddingBottom: { xs: "100%", sm: "56.25%" }, // 16:9 aspect ratio
+                    }}
+                  >
+                    <iframe
+                      src={`https://www.youtube.com/embed/${
+                        post?.youtube.split("=")[1]
+                      }`}
+                      title="YouTube video player"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                      }}
+                    ></iframe>
+                  </Box>
                 </Box>
               )}
 
@@ -134,9 +165,6 @@ export const Details = () => {
 
               <Typography variant="body2">{post?.info_adicional}</Typography>
 
-              {/* <Typography variant="body2">
-                <a href={`mailto:${post?.correo}`}>{post?.correo}</a>
-              </Typography> */}
               <Typography
                 variant="h6"
                 sx={{
@@ -157,6 +185,9 @@ export const Details = () => {
                 padding: 3,
                 justifySelf: "end",
                 elevation: 10,
+                "@media (max-width: 576px)": {
+                  flexWrap: "wrap",
+                },
               }}
             >
               <Typography variant="h4" gutterBottom>
