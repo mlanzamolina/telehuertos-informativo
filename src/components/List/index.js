@@ -141,6 +141,7 @@ export default function List() {
   const navigate = useNavigate();
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [isLoading, setIsLoading] = React.useState(true);
+  // Fetch data from API
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -334,14 +335,19 @@ export default function List() {
             }}
           />
           <TextField
-            type="text"
-            placeholder="Buscar"
+            label="Buscar"
+            id="outlined-basic"
+            size="small"
+            variant="outlined"
             onKeyUp={handleSearch}
             color="success"
             sx={{
               justifySelf: "start",
               alignSelf: "start", // Align the TextField to the left
-              width: "100%", // Add this line to make the TextField wider
+              width: "35%",
+              "@media (max-width: 576px)": {
+                width: "100%",
+              },
             }}
           />
           <TableContainer>
