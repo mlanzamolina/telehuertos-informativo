@@ -326,12 +326,23 @@ export default function List() {
           }}
         >
           {/* Rest of your component code */}
-          <EnhancedTableToolbar numSelected={selected.length} />
+          <EnhancedTableToolbar
+            numSelected={selected.length}
+            sx={{
+              justifySelf: "start",
+              alignSelf: "start", // Align the TextField to the left
+            }}
+          />
           <TextField
             type="text"
             placeholder="Buscar"
             onKeyUp={handleSearch}
             color="success"
+            sx={{
+              justifySelf: "start",
+              alignSelf: "start", // Align the TextField to the left
+              width: "100%", // Add this line to make the TextField wider
+            }}
           />
           <TableContainer>
             <Table
