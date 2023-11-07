@@ -112,18 +112,17 @@ export const Details = () => {
                 flex: 1,
                 padding: 3,
                 justifySelf: "start",
-                justifyContent: "start",
                 elevation: 10,
                 "@media (max-width: 576px)": {
                   flexWrap: "wrap",
                 },
               }}
             >
-              <Typography variant="h4" gutterBottom>
+              <Typography variant="h4" sx={{ textAlign: "left" }} gutterBottom>
                 {post?.Titulo}
               </Typography>
 
-              <Typography variant="body1" gutterBottom>
+              <Typography variant="body1"  sx={{ textAlign: "left" }} gutterBottom>
                 {post?.descripcion}
               </Typography>
 
@@ -162,9 +161,9 @@ export const Details = () => {
                 </Box>
               )}
 
-              <Typography variant="h4">Additional Information</Typography>
+              <Typography variant="h4" sx={{ textAlign: "left" }}>Additional Information</Typography>
 
-              <Typography variant="body2">{post?.info_adicional}</Typography>
+              <Typography variant="body2" sx={{ textAlign: "left" }}>{post?.info_adicional}</Typography>
 
               <Typography
                 variant="h6"
@@ -173,6 +172,7 @@ export const Details = () => {
                   padding: "1rem",
                   borderRadius: "1rem",
                   cursor: "pointer",
+                  textAlign: "left"
                 }}
               >
                 <EmailRounded sx={{ marginRight: ".5rem" }} />
@@ -186,13 +186,14 @@ export const Details = () => {
                 padding: 3,
                 justifySelf: "end",
                 justifyContent: "start",
+                textAlign: "left",
                 elevation: 10,
                 "@media (max-width: 576px)": {
                   flexWrap: "wrap",
                 },
               }}
             >
-              <Typography variant="h4" gutterBottom>
+              <Typography variant="h4" sx={{ textAlign: "left" }} gutterBottom>
                 Download Files
               </Typography>
 
@@ -210,6 +211,7 @@ export const Details = () => {
                             fontSize: "1.2rem",
                             padding: "1rem",
                             borderRadius: "1rem",
+                            textAlign: "left",
                             cursor: "pointer",
                             "&:hover": {
                               backgroundColor: "#e7f4e7",
