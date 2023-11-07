@@ -112,6 +112,7 @@ export const Details = () => {
                 flex: 1,
                 padding: 3,
                 justifySelf: "start",
+                justifyContent: "start",
                 elevation: 10,
                 "@media (max-width: 576px)": {
                   flexWrap: "wrap",
@@ -184,6 +185,7 @@ export const Details = () => {
                 flex: 1,
                 padding: 3,
                 justifySelf: "end",
+                justifyContent: "start",
                 elevation: 10,
                 "@media (max-width: 576px)": {
                   flexWrap: "wrap",
