@@ -52,7 +52,7 @@ export const Details = () => {
               headers: myHeaders,
               body: `idPost=${id}`,
               redirect: "follow",
-            },
+            }
           );
 
           if (filesResponse.ok) {
@@ -118,14 +118,50 @@ export const Details = () => {
                 },
               }}
             >
-              <Typography variant="h4" sx={{ textAlign: "left" }} gutterBottom>
+              <Typography
+                variant="h4"
+                sx={{ textAlign: "justify" }}
+                gutterBottom
+              >
                 {post?.Titulo}
               </Typography>
-
-              <Typography variant="body1"  sx={{ textAlign: "left" }} gutterBottom>
-                {post?.descripcion}
+              <Typography
+                variant="body1"
+                sx={{ 
+                  textAlign: "justify",
+                  '& ul': {
+                    paddingLeft: 0,
+                    listStylePosition: 'inside',
+                  },
+                  '& li': {
+                    paddingLeft: 0,
+                  },
+                }}
+                gutterBottom
+              >
+                <div dangerouslySetInnerHTML={{ __html: post?.descripcion }} />
               </Typography>
 
+              <Typography variant="h4" sx={{ textAlign: "justify" }}>
+                Información Adicional
+              </Typography>
+
+              <Typography
+                variant="body1"
+                sx={{ 
+                  textAlign: "justify",
+                  '& ul': {
+                    paddingLeft: 0,
+                    listStylePosition: 'inside',
+                  },
+                  '& li': {
+                    paddingLeft: 0,
+                  },
+                }}
+                gutterBottom
+              >
+                 <div dangerouslySetInnerHTML={{ __html: post?.info_adicional}} />
+              </Typography>
               {post?.youtube && (
                 <Box
                   sx={{
@@ -161,10 +197,6 @@ export const Details = () => {
                 </Box>
               )}
 
-              <Typography variant="h4" sx={{ textAlign: "left" }}>Additional Information</Typography>
-
-              <Typography variant="body2" sx={{ textAlign: "left" }}>{post?.info_adicional}</Typography>
-
               <Typography
                 variant="h6"
                 sx={{
@@ -172,7 +204,7 @@ export const Details = () => {
                   padding: "1rem",
                   borderRadius: "1rem",
                   cursor: "pointer",
-                  textAlign: "left"
+                  textAlign: "justify",
                 }}
               >
                 <EmailRounded sx={{ marginRight: ".5rem" }} />
@@ -193,8 +225,12 @@ export const Details = () => {
                 },
               }}
             >
-              <Typography variant="h4" sx={{ textAlign: "left" }} gutterBottom>
-                Download Files
+              <Typography
+                variant="h4"
+                sx={{ textAlign: "justify" }}
+                gutterBottom
+              >
+                Archivos Adjuntos
               </Typography>
 
               {isLoading2 ? (
