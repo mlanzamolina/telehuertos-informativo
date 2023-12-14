@@ -7,6 +7,7 @@ import {
   Button,
   Box,
   CircularProgress,
+  image
 } from "@mui/material";
 import DownloadFile from "./DownloadFile";
 import { useNavigate } from "react-router-dom";
@@ -14,64 +15,70 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import DownloadIcon from "@mui/icons-material/Download";
 import { EmailRounded } from "@mui/icons-material";
 import PlayCircleFilledWhiteRounded from "@mui/icons-material/PlayCircleFilledWhiteRounded";
+import ImageSlider from "../ImageSlider";
+
 
 export const Details = () => {
   const { id } = useParams();
   const [post, setItemDetails] = useState(null);
   const [files, setFiles] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoading2, setIsLoading2] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading2, setIsLoading2] = useState(true);
+  const [images, setImages] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
+  
       try {
         // Headers for the API request
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-        myHeaders.append("x-api-key", window.env.REACT_APP_X_API_KEY); // API endpoint URL for POST request
-
-        const apiUrl = `${window.env.REACT_APP_BASE_URL}/post/detalle`; // Fetch item details based on the 'id' parameter using POST method and specified headers
-
-        const response = await fetch(apiUrl, {
-          method: "POST",
-          headers: myHeaders,
-          body: `idPost=${id}`,
-          redirect: "follow",
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setItemDetails(data[0]);
-          setIsLoading(true);
-
-          const filesResponse = await fetch(
-            `${window.env.REACT_APP_BASE_URL}/post/detalle/files`,
-            {
-              method: "POST",
-              headers: myHeaders,
-              body: `idPost=${id}`,
-              redirect: "follow",
-            }
-          );
-
-          if (filesResponse.ok) {
-            const filesData = await filesResponse.json();
-            setFiles(filesData); // Store files data in state
-            setIsLoading2(true);
-          } else {
-            console.error("Error fetching files:", filesResponse.statusText);
+        myHeaders.append("x-api-key", window.env.REACT_APP_X_API_KEY);
+        //add cors header
+        //myHeaders.append("Access-Control-Allow-Origin", "*");
+  
+        const apiUrl = `${window.env.REACT_APP_BASE_URL}/telehuertos/api/post/detalle`;
+        const apiImagesUrl = `${window.env.REACT_APP_BASE_URL}/telehuertos/api/post/detalle/images`;
+  
+        // Function to perform the fetch operation
+        const fetchAndProcess = async (url) => {
+          const response = await fetch(url, {
+            method: "POST",
+            headers: myHeaders,
+            body: `idPost=${id}`,
+            redirect: "follow",
+          });
+  
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
           }
-        } else {
-          console.error("Error fetching item details:", response.statusText);
-        }
+          return await response.json();
+        };
+  
+        // Fetch item details
+        const data = await fetchAndProcess(apiUrl);
+        setItemDetails(data[0]);
+  
+        // Fetch files
+        const filesData = await fetchAndProcess(`${window.env.REACT_APP_BASE_URL}/telehuertos/api/post/detalle/files`);
+        setFiles(filesData);
+  
+        // Fetch images
+        const imagesData = await fetchAndProcess(apiImagesUrl);
+        setImages(imagesData);
+  
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+        setIsLoading2(false);
       }
     };
-
+  
     fetchData();
   }, [id]);
+  
 
   return (
     <Box
@@ -81,7 +88,7 @@ export const Details = () => {
         elevation: 10,
       }}
     >
-      {isLoading ? (
+      {!isLoading ? (
         <>
           <Box sx={{ display: "flex", justifyContent: "start" }}>
             <Button
@@ -129,7 +136,7 @@ export const Details = () => {
                 variant="body1"
                 sx={{ 
                   textAlign: "justify",
-                  '& ul': {
+                  '& ul, & ol': {
                     paddingLeft: 0,
                     listStylePosition: 'inside',
                   },
@@ -139,18 +146,17 @@ export const Details = () => {
                 }}
                 gutterBottom
               >
-                <div dangerouslySetInnerHTML={{ __html: post?.descripcion }} />
+                <div dangerouslySetInnerHTML={{ __html: post?.descripcion}} />
               </Typography>
 
               <Typography variant="h4" sx={{ textAlign: "justify" }}>
                 Información Adicional
               </Typography>
-
               <Typography
                 variant="body1"
                 sx={{ 
                   textAlign: "justify",
-                  '& ul': {
+                  '& ul, & ol': {
                     paddingLeft: 0,
                     listStylePosition: 'inside',
                   },
@@ -160,9 +166,38 @@ export const Details = () => {
                 }}
                 gutterBottom
               >
-                 <div dangerouslySetInnerHTML={{ __html: post?.info_adicional}} />
+                <div dangerouslySetInnerHTML={{ __html: post?.info_adicional}} />
               </Typography>
-              {post?.youtube && (
+              
+              
+              <Typography
+                variant="h6"
+                sx={{
+                  fontSize: "1.2rem",
+                  padding: "1rem",
+                  borderRadius: "1rem",
+                  cursor: "pointer",
+                  textAlign: "justify",
+                }}
+              >
+                <EmailRounded sx={{ marginRight: ".5rem" }} />
+                {post?.correo}
+              </Typography>
+            </Card>
+            <Card
+              sx={{
+                flex: 1,
+                padding: 3,
+                justifySelf: "end",
+                justifyContent: "start",
+                textAlign: "left",
+                elevation: 10,
+                "@media (max-width: 576px)": {
+                  flexWrap: "wrap",
+                },
+              }}
+            >
+                {post?.youtube && (
                 <Box
                   sx={{
                     backgroundColor: "#fff",
@@ -196,35 +231,7 @@ export const Details = () => {
                   </Box>
                 </Box>
               )}
-
-              <Typography
-                variant="h6"
-                sx={{
-                  fontSize: "1.2rem",
-                  padding: "1rem",
-                  borderRadius: "1rem",
-                  cursor: "pointer",
-                  textAlign: "justify",
-                }}
-              >
-                <EmailRounded sx={{ marginRight: ".5rem" }} />
-                {post.correo}
-              </Typography>
-            </Card>
-
-            <Card
-              sx={{
-                flex: 1,
-                padding: 3,
-                justifySelf: "end",
-                justifyContent: "start",
-                textAlign: "left",
-                elevation: 10,
-                "@media (max-width: 576px)": {
-                  flexWrap: "wrap",
-                },
-              }}
-            >
+              <div style={{ marginBottom: "20px" }}></div>
               <Typography
                 variant="h4"
                 sx={{ textAlign: "justify" }}
@@ -233,7 +240,7 @@ export const Details = () => {
                 Archivos Adjuntos
               </Typography>
 
-              {isLoading2 ? (
+              {!isLoading2 ? (
                 Array.isArray(files) && files.length >= 1 ? (
                   <>
                     {files.map((file, index) => (
@@ -274,6 +281,10 @@ export const Details = () => {
               )}
             </Card>
           </Box>
+          <div style={{ marginBottom: "20px" }}></div>
+            <Card>
+              <ImageSlider images={images} />
+            </Card>
         </>
       ) : (
         <CircularProgress />

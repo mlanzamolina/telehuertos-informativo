@@ -1,0 +1,29 @@
+.image-slider-container {
+    /* Reset the styles for the container */
+    /* Add your reset styles here */
+
+
+  }
+  .arrow {
+    font-size: 24px; /* Adjust the font size as needed */
+    color: #008d00; /* Adjust the color as needed */
+    /* Add any other styling properties as desired */
+  }
+  .thumbnail-image {
+    width: 300px; /* Fixed width */
+    height: 200px; /* Fixed height */
+    object-fit: cover; /* Maintain aspect ratio */
+    border-radius: 5%; /* Makes the image circular */
+    transition: transform 0.3s ease-in-out; /* Smooth transition for zoom effect */
+}
+
+.thumbnail-image:hover {
+    transform: scale(1.1); /* Scales up the image to 110% when hovered */
+}
+
+@media (max-width: 600px) {
+    .thumbnail-image {
+        width: 100px; /* Smaller width for smaller screens */
+        height: 100px; /* Smaller height for smaller screens */
+    }
+}

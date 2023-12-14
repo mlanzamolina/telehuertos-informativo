@@ -148,7 +148,7 @@ export default function List() {
       console.log("Fetching data...");
       try {
         const response = await fetch(
-          `${window.env.REACT_APP_BASE_URL}/post/1`,
+          `${window.env.REACT_APP_BASE_URL}/telehuertos/api/post/1`,
           {
             headers: {
               "X-API-KEY": "YXBpa2V5X21zcHNfdHJhbWl0ZXM=",
