@@ -7,7 +7,7 @@ import {
   Button,
   Box,
   CircularProgress,
-  image
+  image,
 } from "@mui/material";
 import DownloadFile from "./DownloadFile";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +16,6 @@ import DownloadIcon from "@mui/icons-material/Download";
 import { EmailRounded } from "@mui/icons-material";
 import PlayCircleFilledWhiteRounded from "@mui/icons-material/PlayCircleFilledWhiteRounded";
 import ImageSlider from "../ImageSlider";
-
 
 export const Details = () => {
   const { id } = useParams();
@@ -29,7 +28,6 @@ export const Details = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-  
       try {
         // Headers for the API request
         const myHeaders = new Headers();
@@ -37,10 +35,10 @@ export const Details = () => {
         myHeaders.append("x-api-key", window.env.REACT_APP_X_API_KEY);
         //add cors header
         //myHeaders.append("Access-Control-Allow-Origin", "*");
-  
+
         const apiUrl = `${window.env.REACT_APP_BASE_URL}/telehuertos/api/post/detalle`;
         const apiImagesUrl = `${window.env.REACT_APP_BASE_URL}/telehuertos/api/post/detalle/images`;
-  
+
         // Function to perform the fetch operation
         const fetchAndProcess = async (url) => {
           const response = await fetch(url, {
@@ -49,25 +47,26 @@ export const Details = () => {
             body: `idPost=${id}`,
             redirect: "follow",
           });
-  
+
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
           return await response.json();
         };
-  
+
         // Fetch item details
         const data = await fetchAndProcess(apiUrl);
         setItemDetails(data[0]);
-  
+
         // Fetch files
-        const filesData = await fetchAndProcess(`${window.env.REACT_APP_BASE_URL}/telehuertos/api/post/detalle/files`);
+        const filesData = await fetchAndProcess(
+          `${window.env.REACT_APP_BASE_URL}/telehuertos/api/post/detalle/files`
+        );
         setFiles(filesData);
-  
+
         // Fetch images
         const imagesData = await fetchAndProcess(apiImagesUrl);
         setImages(imagesData);
-  
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -75,10 +74,9 @@ export const Details = () => {
         setIsLoading2(false);
       }
     };
-  
+
     fetchData();
   }, [id]);
-  
 
   return (
     <Box
@@ -134,19 +132,19 @@ export const Details = () => {
               </Typography>
               <Typography
                 variant="body1"
-                sx={{ 
+                sx={{
                   textAlign: "justify",
-                  '& ul, & ol': {
+                  "& ul, & ol": {
                     paddingLeft: 0,
-                    listStylePosition: 'inside',
+                    listStylePosition: "inside",
                   },
-                  '& li': {
+                  "& li": {
                     paddingLeft: 0,
                   },
                 }}
                 gutterBottom
               >
-                <div dangerouslySetInnerHTML={{ __html: post?.descripcion}} />
+                <div dangerouslySetInnerHTML={{ __html: post?.descripcion }} />
               </Typography>
 
               <Typography variant="h4" sx={{ textAlign: "justify" }}>
@@ -154,22 +152,23 @@ export const Details = () => {
               </Typography>
               <Typography
                 variant="body1"
-                sx={{ 
+                sx={{
                   textAlign: "justify",
-                  '& ul, & ol': {
+                  "& ul, & ol": {
                     paddingLeft: 0,
-                    listStylePosition: 'inside',
+                    listStylePosition: "inside",
                   },
-                  '& li': {
+                  "& li": {
                     paddingLeft: 0,
                   },
                 }}
                 gutterBottom
               >
-                <div dangerouslySetInnerHTML={{ __html: post?.info_adicional}} />
+                <div
+                  dangerouslySetInnerHTML={{ __html: post?.info_adicional }}
+                />
               </Typography>
-              
-              
+
               <Typography
                 variant="h6"
                 sx={{
@@ -197,7 +196,7 @@ export const Details = () => {
                 },
               }}
             >
-                {post?.youtube && (
+              {post?.youtube && (
                 <Box
                   sx={{
                     backgroundColor: "#fff",
@@ -261,7 +260,13 @@ export const Details = () => {
                               color: "black", // Change the letter color to white on hover
                             },
                           }}
-                          onClick={() => window.open(file.FileLink, "_blank")}
+                          onClick={() =>
+                            window.open(
+                              `${window.env.REACT_APP_BASE_URL}/${file.FileLink}`,
+                              "_blank",
+                              "about:blank"
+                            )
+                          }
                         >
                           <DownloadIcon sx={{ marginRight: ".5rem" }} />
                           {file.NombreArchivo}
@@ -282,9 +287,9 @@ export const Details = () => {
             </Card>
           </Box>
           <div style={{ marginBottom: "20px" }}></div>
-            <Card>
-              <ImageSlider images={images} />
-            </Card>
+          <Card>
+            <ImageSlider images={images} />
+          </Card>
         </>
       ) : (
         <CircularProgress />
