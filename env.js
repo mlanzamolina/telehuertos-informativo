@@ -1,5 +1,5 @@
 window.env = {
-  REACT_APP_BASE_URL: "https://des.sanpedrosula.hn",
+  REACT_APP_BASE_URL: "https://prb.sanpedrosula.hn",
   REACT_APP_X_API_KEY: "YXBpa2V5X21zcHNfdHJhbWl0ZXM=",
 };
 
